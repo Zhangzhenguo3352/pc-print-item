@@ -1,0 +1,206 @@
+var service = "https://127.0.0.1" || "https://wx.yinzhimeng.com.cn";
+var dcpware = "https://dcp"; 
+    
+var tid;
+ajaxPost(`${dcpware}/tid`, {}, function(data)
+{
+    console.log(tid);
+    tid = data.tid
+});
+
+if (!tid)
+{
+    error("无法读取设备ID");
+};
+
+var price;
+ajaxPost(`${service}/print/price`, {
+    "terminalId" : tid
+}, function(data)
+{
+    price = data;
+});
+
+if (!price)
+{
+    error("无法读取定价");
+};
+
+var isUSB = true || !!sessionStorage.getItem('isUSB');
+
+
+var usb_parent_dir = ''; // 上级目录
+var usb_current_dir = ''; // 当前目录
+var files;
+
+function showImgFn(item) {
+    var imgElement = ''
+    if(isUSB) {
+        imgElement = `${item.directory ? `<img src="./assets/folder.png" style="width:70px;height:auto" />` : `<img src="./assets/${item.ext}.png" style="width:70px;height:auto" />` }`
+    } else {
+        imgElement = `${fileNameCompare(item.ext) ? `<img src="${item.url}" title="${item.name}" style="height: auto"/>`: `<img src="./assets/folder.png" style="width:70px;height:auto" />`}`
+    }
+    return imgElement;
+}
+
+function load_usb_files(callback, dir)
+{
+    ajaxPost(`${dcpware}/getUsbFile`, {url : dir}, function(data)
+    {
+        usb_parent_dir = data.parentDir;
+        usb_current_dir = data.thisDir;
+        files = data.data.fileList;
+        
+        callback(data.data.fileList);
+    });
+}
+
+function load_cloud_files(callback)
+{
+    ajaxPost(`${service}/userFile/fileList`, {}, function(data)
+    {
+        files = data.data;
+        callback(data.data);
+    });
+}
+
+isUSB = true;
+function load_files(callback, dir)
+{
+    isUSB ? load_usb_files(callback, dir) : load_cloud_files(callback);
+}
+
+function add_to_right(file)
+{
+    console.log(`add ${file.name} to right`);
+    $('.listBox').append(`<li class="liBox">
+                <div>
+                    <div class="imgBox">
+                    <img src="./assets/jpg.png" style="width:70px;height:auto">
+                    </div>
+                    <div class="title">
+                        <h2 title="20180113114330.jpg">20180113114330.jpg<span>（null页）</span></h2>
+                        <div class="clickSet">
+                            A4纸/单面/黑色
+                        </div>
+                    </div>
+                    <div class="addAndRemove">
+                            <div class="delete less disabled">
+                                <div class="imgBox"></div>
+                            </div>
+                            <div class="num printQuantity">1</div>
+                            <div class="add">
+                                <div class="imgBoxAdd"></div>
+                            </div>
+                    </div>
+                    <div class="mon">
+                        <div>
+                            ￥<span>0.00<span>
+                        </span></span></div>
+                    </div>
+                    <div class="flex">
+                        <div class="deleteFn"></div>
+                    </div>
+                </div>
+                <!-- 单个打印设置 -->
+                <div class="singleSelect " style="">
+                    <div>
+                        <div class="clearfix>
+                            <div class="ListBox">
+                                <div class="dan">单/双面</div>
+                                <ul class="clearfix typesOf">
+                                    <li class="active" data-active="s" data-a="10" data-elbind="a" data-elbinda="a">单面</li>
+                                    <li class=" " data-name="mian" data-b="11" data-el-elbind="a" data-elbindb="b">双面</li>
+                                </ul>
+                            </div>
+                            <div style="margin-top: 40px;" class="ListBox">
+                                <div class="paper">颜色</div>
+                                <ul class="clearfix typesOf" data-box="box">
+                                    <li class="active " data-name="cai" data-c="20" data-elelement="B" data-bbb="B">黑色</li>
+                                    <li class=" " data-active="s" data-d="21" data-elelement="B" data-aaa="B">彩色</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div style="margin-top: 40px;" class="ListBox">
+                            <div class="paper">纸张类型</div>
+                            <ul class="clearfix typesOf ulBox" data-ulbox="a">
+                                <li class="active" data-paper0="a">A4纸</li>
+                                <li class="" data-paper1="a">1寸照片</li>
+                                <li class="" data-paper2="a">2寸照片</li>
+                                <li class="" data-paper3="a">7寸照片</li>
+                            </ul>
+                        </div>                        
+                    </div>
+                </div>
+            </li>`);
+}
+
+function add(obj)
+{
+    var index = $(obj).attr('index');
+    var file = files[index];
+    
+    if(file.directory)
+    {
+        load_files(render_files_callback, files[index].url);
+    }
+    else
+    {
+        add_to_right(file);
+    }
+}
+
+function render_files_callback(data)
+{
+    $('#leftBox').html('');
+    data.map((item, index) => 
+    {
+        var time = $.formatDateTime('yy-mm-dd hh-ii', new Date(item.createTime));
+        $('#leftBox').append(`<li index=${index} class="canBeUsed ${item.directory? 'File' : `noFile`}" onclick="add(this);return false;">
+            <div class="imgBox" onclick="return false">
+                ${showImgFn(item)}
+            </div>
+            <div onclick="return false">
+                <h2 title=${item.name} onclick="return false">${InterceptionString(item.name, 20)}</h2>
+                <div class="${item.directory ? `isFile` : '' }" onclick="return false">
+                    <span>${item.createTime == null? '' : `${time}`}</span>
+                    ${item.directory? '<span style="padding-right: 0px"></span>' : `<span style="padding-right: 0px">${readableFileSize(item.size )}</span>`}
+                </div>
+            </div>
+            <div class="x_add" onclick="return false"></div>
+        </li>`);
+    });    
+}
+
+$(function() 
+{
+    load_files(render_files_callback, "");
+    
+    $('#back').on('click', function()
+    {
+        console.log(usb_parent_dir);
+        load_files(render_files_callback, usb_parent_dir);
+    });
+
+    $('#refresh').on('click', function()
+    {
+        console.log(usb_current_dir);
+        load_files(render_files_callback, usb_current_dir);
+    });
+
+     // 安全退出
+    $('#dropOut').on('click', function()
+    {
+        $.ajax({
+            url : `${dcpware}/logout`,
+            type : "get",
+            async : false
+        });
+        $.ajax({
+            url : `${service}/user/logout`,
+            type : "get",
+            async : false
+        });
+        window.location.href = isUSB ? './prompt-take-usb.html' : '/';
+    });    
+});

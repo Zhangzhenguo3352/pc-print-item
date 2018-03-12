@@ -1,0 +1,548 @@
+var terminalId = sessionStorage.getItem('terminal_id');
+
+// 获取定价
+handleAjax('https://wx.yinzhimeng.com.cn:8759/userFile/getPrice',
+// handleAjax('https://192.168.100.10/print/price',
+    {"terminalId" : terminalId},
+    function(ress){
+        moneyData = ress;
+}, false, 'POST');
+
+var isUSB = sessionStorage.getItem('isUSB');
+var getListURL = isUSB ? 'https://dcp/getUsbFile' : 'https://wx.yinzhimeng.com.cn:8759/userFile/fileList';
+
+var moneyData = {};
+var parentDir = ''; // 父级目录
+var leftListData = [];// 左侧 列表数据
+var A4Number = 0;   // 剩余 A4数量
+var pagerNumber = 0; // 剩余 纸张数量
+var paymentAmount = 0; // 剩余 纸张数量
+var totalMount = 0;   // 合计总钱数
+var maxA4Number = 200;
+var maxpagerNumber = 200;
+var A4Amount = 0;  // A4 打印的钱
+var agerAmount = 0;  // 照片纸打印的钱
+var allAmount = 0;  // 照片纸打印的钱
+var currentNumber ; // 点过的 选项
+
+var A4 = 0;
+var photo = 0;
+// 右边 列表数据
+var uniteSetData = {
+	remainingPaperA4 : 100, // A4
+	remainingPhoto: 100, // 照片
+	A4Money: 1,   // A4纸张多少钱
+	photoMoney: 2, // 照片纸张多少钱
+	uniteSetData: []
+};
+
+// 配置项
+var configureJson = {
+	num1: '10', // 数据在 第二行的第一项
+	num2: '21', // 数据在 第三行的第一项
+	style0: 0, // 第二行的样式在 第一项
+	style1: 1  // 第三行的样式在 第二项
+};
+
+var json = {
+	'00': 'A4纸','01': '一寸照片','02': '两寸照片','03': '七寸照片',
+	'10': '单面','11': '双面',
+	'20': '黑色','21': '彩色'
+};
+
+// 本次打印总费用
+var total = 0;
+
+// 计算钱
+function totalMountFn( uniteSetData) {
+	total = 0
+	var data = uniteSetData.uniteSetData
+	for(var i = 0; i< data.length ;i++) {
+		total +=  (data[i].printQuantity * ((data[i].money * data[i].page) ))
+	}
+	return total;
+}
+
+//单个计算
+var singleTotal = 0
+function singleMountFn( data) {
+	singleTotal = 0
+	singleTotal +=  (data.printQuantity * ((data.money * data.page) ))
+	return singleTotal;
+}
+
+function showImgFn(item) {
+	var imgElement = ''
+	if(isUSB) {
+		imgElement = `${item.directory ? `<img src="./assets/folder.png" style="width:70px;height:auto" />` : `<img src="./assets/${item.ext}.png" style="width:70px;height:auto" />` }`
+	} else {
+		imgElement = `${fileNameCompare(item.ext) ? `<img src="${item.url}" title="${item.fileName}" style="height: auto"/>`: `<img src="./assets/folder.png" style="width:70px;height:auto" />`}`
+	}
+	return imgElement;
+}
+
+$(function() {
+	function leftListDataFn(getListURL, url) {
+		$('#leftBox').html('')
+		// 获取左侧列表
+		handleAjax(getListURL,
+            isUSB ? {url: url} : {},
+            function(ress){
+                leftListData = isUSB ? ress.data.fileList : ress.data;
+                parentDir = isUSB ? ress.data.parentDir : '';
+                leftListData.map((item, index) => {
+                	var time = $.formatDateTime('yy-mm-dd hh-ii', new Date(item.createTime))
+                    // 文件夹或支持的格式，左侧才能显现出来
+                	if( item.directory || checkoutFileFormat(item.ext) ) {
+                		$('#leftBox').append(`<li class="canBeUsed ${item.directory? 'File' : `noFile`}">
+							<div class="imgBox" onclick="return false">
+								${showImgFn(item)}
+							</div>
+							<div onclick="return false">
+								<h2 title=${item.fileName} onclick="return false">${InterceptionString(item.fileName, 20)}</h2>
+								<div class="${item.directory ? `isFile` : '' }" onclick="return false">
+									<span>${item.createTime == null? '' : `${time}`}</span>
+									${item.directory? '<span style="padding-right: 0px"></span>' : `<span style="padding-right: 0px">${readableFileSize(item.size )}</span>`}
+									
+								</div>
+							</div>
+							<div class="x_add" onclick="return false"></div>
+						</li>`)
+	               	}
+                })
+
+                // 点击 文件夹
+               	$('.canBeUsed.File').click(function() {
+               		var index = $(this).index(); // 行数
+               		leftListDataFn(getListURL, `${leftListData[index].url}`);
+               	})
+                function idSame(arrId, currentId, index, type) {
+                	for(var i = 0; i < arrId.length; i++) {
+                		if(arrId[i][type] == currentId) {
+                			return false;
+                		}
+                	}
+                	return true;
+                }
+                // 点击 添加 去添加
+                $('.canBeUsed.noFile').click(function() {
+                	var index = $(this).index()
+                	function add() {
+                		uniteSetData.uniteSetData.push({
+							ext: leftListData[index].ext,
+							fileInfo: leftListData[index].fileName,
+							description: leftListData[index].fileName,  // 描述
+							url: leftListData[index].url,
+							page: leftListData[index].pages,   // 页数
+							printFileType: ['00','10','20'],
+							id: leftListData[index].id,
+							money: moneyData[`[00,10,20]`],   // 钱
+							printQuantity: 1,// 打印
+							singleMount: moneyData[`[00,10,20]`], // 单个的钱
+                                                                            // 份数
+							paperType: 'A4',  // 纸张类型
+                                                                            // A4
+							directory: leftListData[index].directory,
+							hash: leftListData[index].hash,
+                            userFileId: leftListData[index].userFileId
+						})
+						delectElement();
+
+                	};
+
+                	if(uniteSetData.uniteSetData.length == 0) {
+                		A4Number++;
+                		add();
+                	} else{
+                		var Use_that_check = isUSB ? leftListData[index].url : leftListData[index].id;
+                		var Use_that_check_type = isUSB ? 'url' : 'id';
+
+                		// 没有相同的id, 可以添加
+                		if(idSame(uniteSetData.uniteSetData, Use_that_check, index, Use_that_check_type)) {
+                			A4Number++;
+                			add();
+                		};
+                	}
+                	$('.footer').show()
+                	$('#submit > div').attr('class','submit')
+                	$('#A4Number').text(A4Number)
+
+				})
+        }, false, 'POST')
+	}
+
+	leftListDataFn(getListURL);
+
+	// 单个选择中 选择打印的类型 处理
+	function printFileTypeFn(item) {
+		var string = item.map((arr, index) => {
+			return json[arr];
+		})
+		return string.join('/');
+	}
+
+	// 选中打印类型处理
+	function fileStylefn(arr, key) {
+		return arr.indexOf(key) != -1;
+	}
+
+	function delectElement() {
+
+ 	if(uniteSetData.uniteSetData.length != 0) {
+		$('.footer').show()
+		$('#submit > div').attr('class','submit')
+
+	} else {
+		$('.footer').hide()
+		$('#submit > div').attr('class','submit active')
+	}
+	$('.listBox').prepend(elementFn())
+	total = totalMountFn(uniteSetData)
+			$('.paymentAmount').text(fen2Yuan(total) )
+		// $('.listBox').prepend(elementFn())
+		// 清除 统一设置 的框
+		function clearFn() {
+			$('.select').hide()
+			$('.selectDown').parent().show()
+		}
+
+		// 点击 统一设置
+		$('.selectDown').click(function() {
+			$(this).parent().hide()
+			$('.select').show()
+			$('.singleSelect').hide()
+		})
+
+		// 点击 向上收起
+		$('.select').click(function() {
+			clearFn()
+			$('.singleSelect').hide()
+		})
+
+		// 点击 单个 设置
+		$('ul.listBox > li .clickSet').on('click',function() {
+			if($(this).parents('li').find('.singleSelect').is(':hidden')) {
+				clearFn()
+				$('.singleSelect').hide()
+				$(this).parents('li').find('.singleSelect').stop().show()
+			} else {
+				$(this).parents('li').find('.singleSelect').stop().hide()
+			}
+		})
+
+		// 统一设置 阻止冒泡
+		$('.select .all').click(function(ev) {
+			ev.stopImmediatePropagation()
+		})
+
+		// 点击 纸张类型
+		$('.listBox > li').find('.typesOf li').click(function(e) {
+			var index = $(this).parents('.liBox').index()
+			var num0 = $(this).parents('.ListBox').index(); // 行数
+			var num1 = $(this).index(); // 某一个
+			var currentEelement = $(this).parents('.ListBox').parent().find('.ListBox')
+			var moneyEelement = $(this).parents('.liBox').find('.money')
+			var selectListData = uniteSetData.uniteSetData[index]
+			selectListData.printFileType[num0] = `${num0}${num1}`
+			// 改变样式前先 判断 是不是 照片，是照片，下面有些东西不能选
+			if(num0 == 0 ) { // 第一行
+				if(`${num0}${num1}` == '00') {// 是 A4纸
+					if(num1 != 0) {
+						currentEelement.eq(1).find('.typesOf li').eq(1).show()
+						currentEelement.eq(2).find('.typesOf li').eq(0).show()
+						currentEelement.eq(1).find('.typesOf li').attr('class', '')
+						currentEelement.eq(2).find('.typesOf li').attr('class', '')
+						currentEelement.find('.typesOf li').eq(0).attr('class', 'active')
+						currentEelement.eq(2).find('.typesOf li').eq(0).attr('class', 'active')
+					} else {
+						currentEelement.eq(1).find('.typesOf li').eq(1).show()
+						currentEelement.eq(2).find('.typesOf li').eq(0).show()
+					}
+					selectListData.paperType = 'A4'
+					var printQuantity = selectListData.printQuantity
+					if(pagerNumber > 0 && currentNumber != `${num0}${num1}${index}`) {
+						A4Number = A4Number + printQuantity;
+						pagerNumber = pagerNumber - printQuantity
+						$('#A4Number').text(A4Number)
+						$('#pagerNumber').text(pagerNumber)
+						currentNumber = `${num0}${num1}${index}`
+					}
+				} else {
+					var printQuantity = selectListData.printQuantity
+					if(A4Number > 0 && currentNumber != `${num0}${num1}${index}` && selectListData.paperType != 'photo') {
+						var num = A4Number
+						A4Number = num - printQuantity;
+						pagerNumber = pagerNumber + printQuantity
+						$('#A4Number').text(A4Number)
+						$('#pagerNumber').text(pagerNumber)
+						currentNumber = `${num0}${num1}${index}`
+					}
+					currentEelement.eq(1).find('.typesOf li').eq(1).hide()
+					currentEelement.eq(2).find('.typesOf li').eq(0).hide()
+					currentEelement.eq(1).find('.typesOf li').attr('class', '')
+					currentEelement.eq(2).find('.typesOf li').attr('class', '')
+					currentEelement.eq(1).find('.typesOf li').eq(configureJson.style0).attr('class', 'active')
+					currentEelement.eq(2).find('.typesOf li').eq(configureJson.style1).attr('class', 'active')
+					selectListData.printFileType[1] = configureJson.num1;
+					selectListData.printFileType[2] = configureJson.num2;
+					selectListData.paperType = 'photo'
+
+					// 点击完 去设置
+					var text = $(this).parents('.liBox').find('.clickSet').text().split('/')
+					text[1] = "单面"
+					text[2] = "彩色"
+					$(this).parents('.liBox').find('.clickSet').text(text.join('/'))
+				}
+			}
+			$(this).parents('.ListBox').find('.typesOf > li').attr('class', '')
+			$(this).parents('.ListBox').find('.typesOf > li').eq(num1).attr('class', 'active')
+
+			// 点击完 去设置
+			var text = $(this).parents('.liBox').find('.clickSet').text().split('/')
+			text[num0] = $(this).text()
+			$(this).parents('.liBox').find('.clickSet').text(text.join('/'))
+			selectListData.money = moneyData[`[${String(selectListData.printFileType)}]`]
+			total = totalMountFn(uniteSetData)
+
+			$('.paymentAmount').text(fen2Yuan(total) )
+			$(this).parents('.liBox').find('.mon span').text(fen2Yuan(singleMountFn(selectListData)));
+			selectListData.singleMount = singleMountFn(selectListData)
+		})
+
+		// 删除
+		$('.deleteFn').click(function() {
+			var index = $(this).parents('.liBox').index()
+			var currentPrintQuantity = uniteSetData.uniteSetData[index].printQuantity
+	  		if(uniteSetData.uniteSetData[index].paperType == 'A4') {
+	  			A4Number -= currentPrintQuantity
+	  			$('#A4Number').text(A4Number)
+	  		} else {
+	  			pagerNumber -= currentPrintQuantity
+	  			$('#pagerNumber').text(pagerNumber)
+	  		}
+	  		uniteSetData.uniteSetData.splice(index , 1)
+	  		total = totalMountFn(uniteSetData)
+			$('.paymentAmount').text(fen2Yuan(total) )
+			delectElement()
+
+		})
+		// 点击 - 或 + 时的方法
+		function minusAndAdd(key, _this) {
+			var index = _this.parents('.liBox').index();
+			var unite = uniteSetData.uniteSetData[index];
+			if(key == 'delete') {
+				changeNumber('delete', index)
+				// 改数据
+				unite.printQuantity--
+				if(unite.printQuantity <1) {
+					unite.printQuantity = 1;
+					return;
+				}
+				// 改样式
+			} else {
+				changeNumber('add', index)
+				// 改数据
+				unite.printQuantity++
+				if(unite.printQuantity <0) {
+					unite.printQuantity = 0;
+					return;
+				}
+			}
+			unite.printQuantity = unite.printQuantity;
+			_this.parents('.liBox').find('.mon span').text(fen2Yuan(singleMountFn(unite)));
+			unite.singleMount = singleMountFn(unite)
+			_this.parents('.liBox').find('.printQuantity').text(unite.printQuantity);
+
+			_this.parents('.liBox').find('.delete').html(unite.printQuantity <= 1 ? `<div class="imgBox"></div>` : `<div class="imgBox active"></div>`);
+			uniteSetData.uniteSetData[index].printQuantity = unite.printQuantity
+
+			total = totalMountFn(uniteSetData)
+			$('.paymentAmount').text(fen2Yuan(total) )
+		}
+		// 添加打印纸张数量
+		$('.add').click(function() {
+			minusAndAdd('add', $(this))
+		})
+		// 减
+		$('.delete.less').click(function() {
+			minusAndAdd('delete', $(this))
+		})
+		// 修改 数字
+		function changeNumber(symbol, index) {
+			var unite = uniteSetData.uniteSetData[index];
+			if(symbol == 'delete') {
+				if(unite.printQuantity == 0) return;
+				if(unite.paperType == 'A4' ) {
+					A4Number--;
+					if(A4Number <= 1) {
+						return
+						A4Number = 1;
+					}
+				} else { // 照片纸
+					pagerNumber--;
+					if(pagerNumber <= 1) {
+						return
+						pagerNumber = 1
+					}
+					photo = unite.money
+				}
+			} else {
+				if(unite.paperType == 'A4' ) {
+					A4Number++;
+					if(A4Number >= maxA4Number) {
+						A4Number = maxA4Number;
+					}
+				} else { // 照片纸
+					pagerNumber++;
+					if(pagerNumber >= maxpagerNumber) {
+						pagerNumber = maxpagerNumber;
+					}
+					photo = unite.money
+				}
+			}
+			$('#A4Number').text(A4Number)
+			$('#pagerNumber').text(pagerNumber)
+		}
+
+}
+	// 提交
+	$(document).on('click','#submit',function(ev){
+		if($('div').hasClass('submit active')) return
+	    sessionStorage.setItem('isPrinting', true);
+	    window.location.href = 'waiting.html';
+		var data = uniteSetData.uniteSetData
+		var submitPrintData = new Array(); // 提交的打印数据
+		for(var i = 0; i < data.length; i++) {
+			submitPrintData.push({
+				"isU_Disc": isUSB,
+				"hash": data[i].hash,
+				"config": `${String(data[i].printFileType)}`,
+				"ext": data[i].ext,
+				"prices": 2,
+				"url": data[i].url,
+                "copies": 1,
+                "id": data[i].userFileId
+			})
+		}
+		console.log('submitPrintData', submitPrintData);
+        console.log('uniteSetData.uniteSetData', uniteSetData.uniteSetData)
+		// 获取纸张价钱
+		// handleAjax('https://dcp/print',
+        handleAjax('https://127.0.0.1:443/payment/pay?printerId=001',
+	        {
+				"data": submitPrintData
+			},
+	        function(submit_ress){
+	        	if(submit_ress.code == 0) {
+	        		$('body').append(`<div class="wx_payment">
+										<div>
+											<img src="assets/erweima.png"/>
+											<div class="prompt">
+												请用微信二维码支付
+											</div>
+										</div>
+									</div>`)
+	        	}
+                // 点击二维码
+				$('.wx_payment').click(function() {
+					$('body').find('.wx_payment').remove()
+				})
+	    }, false, 'POST')
+	})
+
+
+	$(document).on('click','.back',function(ev){
+		if(!!isUSB) leftListDataFn(getListURL, `${parentDir == null ? '' : parentDir}`)
+	})
+	$(document).on('click','.refresh',function(ev){
+		leftListDataFn(getListURL)
+	})
+
+	// 添加节点
+	function elementFn() {
+		$('.listBox').html('')
+		return uniteSetData.uniteSetData.map((item, index) => {
+			return `<li class="liBox">
+				<div>
+					<div class="imgBox">
+					${showImgFn(item)}
+					</div>
+					<div class="title">
+						<h2 title="${item.fileInfo}">${InterceptionString(item.fileInfo, 20)}<span>（${item.page}页）</span></h2>
+						<div class="clickSet">
+
+							${	
+								printFileTypeFn(item.printFileType)
+							}
+						</div>
+					</div>
+					<div class="addAndRemove">
+							<div class="delete less disabled">
+								${item.printQuantity <= 1 ? `<div class="imgBox"></div>` : `<div class="imgBox active"></div>`}
+							</div>
+							<div class="num printQuantity">${item.printQuantity}</div>
+							<div class="add">
+								<div class="imgBoxAdd"></div>
+							</div>
+					</div>
+					<div class="mon">
+						<div>
+							￥<span>${fen2Yuan(item.singleMount)}<span>
+						</div>
+					</div>
+					<div class="flex">
+						<div class="deleteFn"></div>
+					</div>
+				</div>
+				<!-- 单个打印设置 -->
+				<div class="singleSelect " style="display: none">
+					<div>
+						<div class="ListBox">
+							<div class="paper">纸张类型</div>
+							<ul class="clearfix typesOf ulBox" data-ulBox="a">
+								<li class="${fileStylefn(item.printFileType, '00') ? 'active' : ''}" data-paper0="a">A4纸</li>
+								<li class="${fileStylefn(item.printFileType, '01') ? 'active' : ''}" data-paper1="a">1寸照片</li>
+								<li class="${fileStylefn(item.printFileType, '02') ? 'active' : ''}" data-paper2="a">2寸照片</li>
+								<li class="${fileStylefn(item.printFileType, '03') ? 'active' : ''}" data-paper3="a">7寸照片</li>
+							</ul>
+						</div>
+						<div style="margin-top: 40px;"  class="ListBox">
+							<div class="dan">单/双面</div>
+							<ul class="clearfix typesOf" >
+								<li class="${fileStylefn(item.printFileType, '10') ? 'active' : ''}" data-active="s" data-A="10" data-elbind="a" data-elbindA="a">单面</li>
+								<li class="${fileStylefn(item.printFileType, '11') ? 'active' : ''} " data-name="mian" data-B="11" data-el-elbind="a" data-elbindB="b">双面</li>
+							</ul>
+						</div>
+						<div style="margin-top: 40px;" class="ListBox">
+							<div class="paper">颜色</div>
+							<ul class="clearfix typesOf" data-box="box">
+								<li class="${fileStylefn(item.printFileType, '20') ? 'active' : ''} "data-name="cai" data-C="20" data-elElement="B" data-bbb="B">黑色</li>
+								<li class="${fileStylefn(item.printFileType, '21') ? 'active' : ''} " data-active="s" data-D="21" data-elElement="B" data-aaa="B">彩色</li>
+							</ul>
+						</div>
+						
+					</div>
+				</div>
+			</li>`
+		})
+	}
+
+	// 点击统一按钮的方法 处理
+	function printSetTypeFn(arr, num0, num1, index) {
+		arr[num0] = `${num0}${num1}`;
+		uniteSetData.uniteSetData[index].printFileType = arr
+	}
+
+	// 安全退出
+	$('.dropOut').click(dropOut)
+	function dropOut() {
+		handleAjax('https://dcp/logout',
+	    {},
+	    function(logout_res){
+	        window.location.href = isUSB ? './prompt-take-usb.html' : '/';
+	    }, false );
+	}
+
+	
+
+})

@@ -1,0 +1,14 @@
+#progress {
+	width: 96%;
+	background-color: grey;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	transform: translate(0, -50%);
+}
+
+#bar {
+	width: 0%;
+	height: 10px;
+	background-color: green;
+}

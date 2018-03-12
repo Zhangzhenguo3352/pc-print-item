@@ -1,0 +1,21 @@
+$(function()
+{
+    sessionStorage.removeItem('isUSB');
+
+    $('#wx_print').click(function()
+    {
+        window.location.href = "./settings.html";
+    });
+
+    $('#U_print').click(function()
+    {
+        sessionStorage.setItem('isUSB', true);
+        window.location.href = "./settings.html";
+    });
+
+    // go to ad
+    setTimeout(function()
+    {
+        window.location.href = "./waiting.html";
+    }, 60000);
+})

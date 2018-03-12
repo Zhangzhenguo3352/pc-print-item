@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0"/>
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="format-detection" content="telephone=no">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta http-equiv="Expires" content="0">
+	<title>印之梦共享云打印</title>
+	<script src="./js/jquery-2.2.3.min.js" ></script>
+	<script src="./js/main.js" ></script>
+	<script src="./js/printSettings.js" ></script>
+	<script src="./js/ripple.js" ></script>
+	<link rel="stylesheet" href="styles/main.css" media="screen" title="no title" charset="utf-8"/>
+</head>
+<body>
+<div class="container">
+	<div class="headerBox clearfix">
+		<h1></h1>
+		<span>打印设置</span>
+		<div class="dropOut" onclick="return false">
+			安全退出
+		</div>
+	</div>
+	<div class="fileSet">
+		<div class="left">
+			<div>
+				<div class="top clearfix">
+						文件夹名称
+						<div class="back" ></div>
+						
+						<div class="refresh"></div>
+						<!-- 文件夹名称
+					<div class="file clearfix">
+						<div class="back" ></div>
+						<div class="refresh"></div>
+					</div> -->
+				</div>
+				<ul class="bottom testa" id="leftBox">
+					
+				</ul>
+			</div>
+		</div>
+		<div class="right">
+			<h2 class="title">待打印文件</h2>
+			<div class=" content_listBox testa">
+				<div class="margin">
+					<div>
+						<h3 class="title clearfix">
+							<div class="selectDown">
+								<img src="./assets/allSet.png" class="selectOn_img"/>
+								统一设置
+							</div>
+						</h3>
+
+						<!-- 单个打印设置 -->
+							<div class="select " style="display: none">
+								<div class="all">
+									<div class="ListBox">
+										<div class="paper">纸张类型</div>
+										<ul class="clearfix AlltypesOf">
+											<li>A4纸</li>
+											<li >1寸照片</li>
+											<li >2寸照片</li>
+											<li >7寸照片</li>
+										</ul>
+									</div>
+									<div style="margin-top: 40px;"  class="ListBox">
+										<div class="dan">单/双面</div>
+										<ul class="clearfix AlltypesOf" >
+											<li>单面</li>
+											<li class="mian">双面</li>
+											
+										</ul>
+									</div>
+									<div style="margin-top: 40px;" class="ListBox">
+										<div class="paper">颜色</div>
+										<ul class="clearfix AlltypesOf">
+											<li class="cai">黑色</li>
+											<li >彩色</li>
+										</ul>
+									</div>
+									
+								</div>
+								<div class="selectOn_img">
+									<h3 class="selectOn">
+										<img src="./assets/allSet.png" class="selectOn_img"/>
+										向上收起
+									</h3>
+								</div>
+							</div>
+					</div>
+					<div class="">
+						<ul class="listBox">
+					
+							
+						</ul>
+						<div class="footer">
+							<div class="bottomFlexd clearfix" onclick="return false">
+								<div class="totalMountBox">
+									<div class="imgBox2">
+										合计
+									</div>
+									<div class="title">
+										
+									</div>
+									<div class="addAndRemove">
+										
+									</div>
+									<div class="mon">
+										<div>
+											￥<span class="paymentAmount">0</span>
+										</div>
+									</div>
+									<div class="flex2">
+									</div>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				
+			</div>
+		</div>
+		
+	</div>
+</div>
+<div class="footerBox">
+	<div class="first"></div>
+	<div class="clearfix right">
+		<div class="text">
+			剩余A4纸：<span id="A4Number">0</span>张 照片纸：<span id="pagerNumber">0</span>张
+		</div>
+		<div class="btn" id="submit">
+			<div class="submit">付款打印 <span class="paymentAmount">0</span>元<div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

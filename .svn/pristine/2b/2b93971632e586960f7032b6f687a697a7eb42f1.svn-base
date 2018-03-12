@@ -1,0 +1,74 @@
+$(function()
+{
+    var isPrinting = sessionStorage.getItem('isPrinting');
+
+    if (isPrinting)
+    {
+        var pages = sessionStorage.getItem('pages') || 10;
+        // var files = sessionStorage.getItem('files') || ["请等待"];
+        
+        $(".loadingBOX").show();
+        setTimeout(function()
+        {
+            sessionStorage.removeItem('isPrinting');
+            window.location.href = "./finish.html";
+        }, pages*1000)
+    }
+
+    var showvideo = function()
+    {
+        var videos = [ 'https://dcp/video/333.mp4', 'https://dcp/video/444.mp4' ];
+        var index = 0;
+
+        $("#videoplayer").show();
+
+        var video = document.getElementById("videoplayer");
+
+        var playvideo = function()
+        {
+            video.src = videos[index++ % videos.length];
+            video.load();
+            video.play();
+        }
+
+        video.addEventListener("ended", function()
+        {
+            playvideo();
+        }, false);
+
+        playvideo();
+
+        video.onclick = function()
+        {
+            window.location.href = "./home.html";
+        }
+    }
+
+    var showbanner = function()
+    {
+        $("#banners").show();
+
+        var mySwiper = new Swiper('.swiper-container', {
+            slidesPerView : 1,
+            spaceBetween : 0,
+            loop : true,
+            effect : 'fade',
+            autoplay : {
+                delay : 1000,
+                stopOnLastSlide : false,
+                disableOnInteraction : false
+            },
+            pagination : {
+                el : '.swiper-pagination',
+                clickable : true,
+            }
+        });
+        var banners = document.getElementById('banners');
+        banners.onclick = function()
+        {
+            window.location.href = "./home.html";
+        }
+    }
+
+    Math.random() > 0.5 ? showvideo() : showbanner();
+})

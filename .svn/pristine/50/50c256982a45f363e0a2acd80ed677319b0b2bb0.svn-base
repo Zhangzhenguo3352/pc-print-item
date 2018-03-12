@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	 <!-- 移动端适配方法-->
+	 <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0"/>
+	 <!-- 就是删除默认的苹果工具栏和菜单栏 ,只 yes 或 no-->
+	 <meta name="apple-mobile-web-app-capable" content="yes">
+	 <!-- 作用是控制状态栏显示样式-->
+	 <meta name="apple-mobile-web-app-status-bar-style" content="black">
+	 <!-- 作者是谁-->
+	 <meta name="author" content="zhangzhenguo">
+	 <!-- 这个页面显示的字符集编码是-->
+	 <!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">-->
+	 <!-- 去除苹果手机 数字 拨号-->
+	 <meta name="format-detection" content="telephone=no">
+	 <!-- 表示网页在任何时候都不能被Cache存储 ，下面三个是一起用的-->
+	 <meta http-equiv="Pragma" content="no-cache">
+	 <meta http-equiv="Cache-Control" content="no-cache">
+	 <meta http-equiv="Expires" content="0">
+
+	 <!--7个以内 没有太大用处 ，说是争强关键字搜索 ，只建议首页、目录页、重要的内容页和主题页里面含，一般7个以内为宜-->
+	 <!-- 如： <meta name="Keywords" content="站长,站长之家,站长资讯,站长网,站长工具"/>-->
+	 <meta name="description" content="练习页面，字体不会显现出来">
+	 <!-- 75个字，150个字符以内，标题里面没有包含的关键词写入进去。Description含有关键词对于该关键词排名是有利的-->
+	 <!-- 如 ：<meta name="Description" content="站长之家（中国站长站）为个人站长与企业网络提供全面的站长资讯、最新最全的源代码程序下载、海量建站素材、强大的搜索优化工具、网站 流量统计服务已经一站式网络解决方案，七年来我们一直致力为中文网站提供动力。>/>-->
+	 <meta name="Keywords" content="网上购物,手机,笔记本,电脑,MP3,CD,VCD,DV,相机,数码,配件,手表,存储卡,京东商城">
+
+	<title>Document</title>
+	<script src="./js/jquery-2.2.3.min.js" ></script>
+	<script src="./js/main.js" ></script>
+	<script src="./js/sweetalert.min.js" ></script>
+	<link rel="stylesheet" href="styles/sweetalert.css" media="screen" title="no title" charset="utf-8"/>
+	<link rel="stylesheet" href="styles/main.css" media="screen" title="no title" charset="utf-8"/>
+	
+
+</head>
+<body>
+<div class="homeContent" >
+    <div class="titleBox">
+        <h1></h1>
+        <div class="title">欢迎使用共享打印设备</div>
+    </div>
+       
+    <div class="usbPromptBox">
+        <div class="usbPrompt">
+             <h3>请插入U盘</h3>
+             <img src="./assets/USB.png"/>
+             <div class = "imgBox"></div>
+             <div class="back">返回</div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0"/>
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="format-detection" content="telephone=no">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta http-equiv="Expires" content="0">
+    <title>印之梦共享云打印</title>
+	<script src="./js/jquery-2.2.3.min.js" ></script>
+	<script src="./js/main.js" ></script>
+    <script src="./js/swiper.min.js"></script>
+	<script src="./js/printing.js" ></script>
+    <script src="./js/ripple.js" ></script>
+	<link rel="stylesheet" href="styles/sweetalert.css" media="screen" title="no title" charset="utf-8"/>
+    <link rel="stylesheet" href="./styles/swiper.min.css">
+	<link rel="stylesheet" href="styles/main.css" media="screen" title="no title" charset="utf-8"/>
+</head>
+<body>
+  <div class="swiper-container">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide">
+            <img src="./assets/home-bj.png"/>
+        </div>
+        <div class="swiper-slide">
+            <img src="./assets/home-bj.png"/>
+        </div>
+        <div class="swiper-slide">
+            <img src="./assets/home-bj.png"/>
+        </div>
+        <div class="swiper-slide">
+            <img src="./assets/home-bj.png"/>
+        </div>
+    </div>
+    </div>
+    <div class="logoAdvertisingPage">
+        <img src="./assets/LOGO-2.png"/>
+    </div>
+    <!-- 打印进度 -->
+    <div class="loadingBOX">
+        <div class="flex clearfix"><span>正在打印 </span><span>xxx文件.doc </span></div>
+        <div class="articleBox clearfix">
+            <div class="left">
+                <div style="width:90%">
+                    <div></div>
+                </div>
+            </div>
+            <div class="right">90%</div>
+      </div>
+    </div>
+</body>
+</html>

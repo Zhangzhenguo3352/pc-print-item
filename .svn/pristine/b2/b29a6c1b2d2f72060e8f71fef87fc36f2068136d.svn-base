@@ -1,0 +1,17 @@
+
+$(function() {
+    sessionStorage.setItem('U_print', '');
+    
+    $('#wx_print').click(function() {
+        // 设置值
+        sessionStorage.setItem('U_print', '');
+        window.location.href="./printSettings.html"; 
+    })
+
+    $('#U_print').click(function() {
+        // 设置值
+        sessionStorage.setItem('U_print', true);
+        window.location.href="./printSettings.html"; 
+    })
+    
+})

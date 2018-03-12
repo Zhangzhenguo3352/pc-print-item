@@ -1,0 +1,132 @@
+$(function()
+{
+    $("#jq_ez_bg").children('img').css("position", "relative");
+    autoElement($("#jq_ez_bg"))
+    $(window).bind("resize", function() {
+        autoElement($("#jq_ez_bg"));
+    });
+
+    var isPrinting = sessionStorage.getItem('isPrinting');
+
+    if (isPrinting)
+    {
+        var pages = sessionStorage.getItem('pages');
+        if (!pages || pages < 10)
+        {
+            pages = 10;
+        }
+
+        var files = sessionStorage.getItem('files') || [ "请等待" ];
+
+        $(".loadingBOX").show();
+
+        var process = 0;
+        var threshhold = 70 + Math.random() * 20;
+
+        var interval = 5;
+        var step = 100 / (pages * 1000 / interval);
+
+        var id = setInterval(frame, interval);
+
+        function frame()
+        {
+            if (process >= 100)
+            {
+                clearInterval(id);
+                sessionStorage.removeItem('isPrinting');
+                window.location.href = "./finish.html";
+            }
+            else
+            {
+                // check print process
+                if (process >= threshhold && isPrinting)
+                {
+                    // move faster
+                    interval = 50;
+                    step = 100 / (pages * 1000 / interval);
+                    
+                    // reset interval
+                    clearInterval(id);
+                    id = setInterval(frame, interval);
+                    
+                    $.ajax({
+                        url : 'https://dcp/finished',
+                        type : "get",
+                        success : function(res)
+                        {
+                            if(res)
+                            {
+                                isPrinting =  false;
+                            }
+                        }
+                    });
+                    
+                    // process stopping until print job finished.
+                    if(isPrinting)
+                    {
+                        return;
+                    }
+                }
+                process += step;
+                $('#bar').width(process + '%');
+            }
+        }
+    };
+
+    var showvideo = function()
+    {
+        var videos = [ 'https://dcp/video/333.mp4', 'https://dcp/video/444.mp4' ];
+        var index = 0;
+
+        $("#videoplayer").show();
+
+        var video = document.getElementById("videoplayer");
+
+        var playvideo = function()
+        {
+            video.src = videos[index++ % videos.length];
+            video.load();
+            video.play();
+        }
+
+        video.addEventListener("ended", function()
+        {
+            playvideo();
+        }, false);
+
+        playvideo();
+
+        video.onclick = function()
+        {
+            window.location.href = "./home.html";
+        }
+    }
+
+    var showbanner = function()
+    {
+        $("#banners").show();
+
+        var mySwiper = new Swiper('.swiper-container', {
+            slidesPerView : 1,
+            spaceBetween : 0,
+            loop : true,
+            effect : 'fade',
+            autoplay : {
+                delay : 1000,
+                stopOnLastSlide : false,
+                disableOnInteraction : false
+            },
+            pagination : {
+                el : '.swiper-pagination',
+                clickable : true,
+            }
+        });
+        var banners = document.getElementById('banners');
+        banners.onclick = function()
+        {
+            window.location.href = "./home.html";
+        }
+    }
+
+    Math.random() > 0.9999 ? showvideo() : showbanner();
+})

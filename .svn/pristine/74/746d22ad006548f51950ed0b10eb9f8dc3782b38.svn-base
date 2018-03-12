@@ -1,0 +1,155 @@
+function ajaxPost(url,
+                  data,
+                  callback)
+{
+    $.ajax({
+        url : url,
+        data : data,
+        success : function(data)
+        {
+            callback(data);
+        },
+        error : function(req,
+                         textStatus,
+                         errorThrown)
+        {
+            console.log('textStatus, errorThrown', textStatus, errorThrown);
+        },
+        dataType : 'json',
+        type : 'post',
+        async : true
+    });
+};
+
+function handleAjax(url,
+                    param,
+                    callback,
+                    isErrShow,
+                    getmMode)
+{
+    var mode = getmMode || 'GET';
+
+    if (mode == 'POST' || mode == 'post')
+    {
+        return $.ajax({
+            url : url,
+            type : mode,
+            dataType : 'JSON',
+            // data: '{"url":"E:\\"}',
+            data : param,
+            // data: JSON.stringify(param),
+            // data: encodeURIComponent(JSON.stringify(param)),
+            // contentType : 'application/json', // 默认值
+            // contentType: 'charset=utf-8', // 默认值
+            success : function(res)
+            {
+                callback(res);
+            },
+            error : function(req,
+                             textStatus,
+                             errorThrown)
+            {
+                console.log('textStatus, errorThrown', textStatus, errorThrown);
+            }
+        });
+    }
+    else
+        if (mode == 'GET' || mode == 'get') { return $.ajax({
+            url : url,
+            type : mode,
+            dataType : 'JSON',
+            success : function(res)
+            {
+                callback(res);
+            },
+            error : function(req,
+                             textStatus,
+                             errorThrown)
+            {
+                console.log('textStatus, errorThrown', textStatus, errorThrown);
+            }
+        }); }
+}
+
+function fileNameCompare(suffix)
+{
+    return /(jpg|jpeg|png|gif)/.test(suffix);
+}
+
+function checkoutFileFormat(suffix)
+{
+    return /(jpg|jpeg|png|gif|bmp|doc|docx|xls|xlsx|ppt|pptx|txt|pdf)/.test(suffix);
+}
+
+// 应该在后台直接处理，不必前台处理
+function getDefaultHours(time,
+                         flag)
+{
+    return "改为后台处理后去掉此方法";
+}
+
+// 转换为人类可读
+function readableFileSize(size)
+{
+    var units = [ 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB' ];
+    var i = 0;
+    while (size >= 1024)
+    {
+        size /= 1024;
+        ++i;
+    }
+    return size.toFixed(2) + '' + units[i];
+}
+
+// 以分为单位转为以元为单位
+function fen2Yuan(n)
+{
+    return (n / 100).toFixed(2);
+}
+
+// 截取字符串
+function InterceptionString(str,
+                            length)
+{
+    if (str.length >= length) str = str.replace(/^(.......).*(.........)$/, "$1***$2")
+    return str
+}
+
+// 禁用 右键
+function disabledRight()
+{
+    if (document.layers)
+    {
+        document.captureEvents(Event.MOUSEDOWN);
+    }
+    document.onmousedown = click;
+    document.oncontextmenu = new Function("return false;")
+    function click(e)
+    {
+        e = e || event;
+        if (e.button == 2)
+        {
+            var tag = e.srcElement || e.target;
+            if (tag.type == "text" || tag.type == "textarea")
+            {
+                document.oncontextmenu = new Function("return true;")
+            }
+            else
+            {
+                document.oncontextmenu = new Function("return false;")
+            }
+        }
+    }
+}
+// disabledRight()
+
+function random(n,
+                m)
+{
+    return parseInt(Math.random() * (m - n) + n)
+}
+
+function error(message)
+{
+    window.location.href = './fault.html?' + message;
+}

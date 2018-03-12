@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0"/>
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="format-detection" content="telephone=no">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta http-equiv="Expires" content="0">
+	<title>印之梦共享云打印</title>
+	<script src="./js/jquery-2.2.3.min.js" ></script>
+	<script src="./js/main.js" ></script>
+	<script src="./js/printSettings.js" ></script>
+	<script src="./js/ripple.js" ></script>
+	<link rel="stylesheet" href="styles/main.css" media="screen" title="no title" charset="utf-8"/>
+</head>
+<body>
+<div class="container">
+	<div class="headerBox clearfix">
+		<h1></h1>
+		<span>打印设置</span>
+		<div class="dropOut" onclick="return false">
+			安全退出
+		</div>
+	</div>
+	<div class="fileSet">
+		<div class="left">
+			<div>
+				<div class="top">
+					文件夹名称
+					<div class="file clearfix">
+						<div class="back"></div>
+						<div class="refresh"></div>
+					</div>
+				</div>
+				<ul class="bottom testa" id="leftBox">
+					
+				</ul>
+			</div>
+		</div>
+		<div class="right ">
+			<h2 class="title">待打印文件</h2>
+			<div>
+				<h3 class="title clearfix">
+					<div class="selectDown">
+						<img src="./assets/xian.png"/>
+						统一设置
+					</div>
+				</h3>
+
+				<!-- 单个打印设置 -->
+					<div class="select " style="display: none">
+						<div class="all">
+							<div class="a">
+								<div class="paper">纸张类型</div>
+								<ul class="clearfix AlltypesOf">
+									<li>A4纸</li>
+									<li >一寸照片</li>
+									<li >两寸照片</li>
+									<li >七寸照片</li>
+								</ul>
+							</div>
+							<div style="margin-top: 40px;"  class="a">
+								<div class="dan">单/双面</div>
+								<ul class="clearfix AlltypesOf" >
+									<li>单面</li>
+									<li class="mian">双面</li>
+									
+								</ul>
+							</div>
+							<div style="margin-top: 40px;" class="a">
+								<div class="paper">颜色</div>
+								<ul class="clearfix AlltypesOf">
+									<li class="cai">黑色</li>
+									<li >彩色</li>
+								</ul>
+							</div>
+							
+						</div>
+						<div>
+							<h3 class="selectOn">
+								<img src="./assets/xian.png"/>
+								向上收起
+							</h3>
+						</div>
+					</div>
+			</div>
+			<ul class="listBox testa">
+			
+			</ul>
+		</div>
+		<div class="footer">
+			<div class="first"></div>
+			<div class="bottomFlexd clearfix">
+				<div class="text">
+					剩余A4纸：<span id="A4Number">0</span>张 照片纸：<span id="pagerNumber">0</span>张
+				</div>
+				<div class="btn" id="submit">
+					<div>付款打印 <span id="paymentAmount">0</span>元<div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

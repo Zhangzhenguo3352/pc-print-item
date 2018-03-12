@@ -1,0 +1,39 @@
+.wx_payment{
+  position: fixed;
+  width:100vw;
+  height:100vh;
+  background-color: rgba(49, 49, 49, 0.4);
+  top:0;
+  left:0;
+  z-index: 99999;
+}
+.wx_payment > div{
+	 position: absolute;
+  	top: 50%;
+  	left:50%;
+  	transform: translate(-50%,-50%);
+  	height:300px;
+  width:300px;
+}
+.wx_payment img{
+  height:300px;
+  width:300px;
+  
+  border:6px solid #ccc;
+  border-bottom:0px solid #ccc;
+  border-radius: 8px 8px 0 0;
+}
+.wx_payment .prompt{
+	height: 50px;
+    width: 300px;
+    line-height: 42px;
+    border: 6px solid #ccc;
+    border-top: 1px solid #ccc;
+    border-radius: 0px 0px 8px 8px;
+    position: absolute;
+    bottom: -50px;
+    left: 0;
+    background-color: #fff;
+    font-size: 22px;
+    text-align: center;
+}

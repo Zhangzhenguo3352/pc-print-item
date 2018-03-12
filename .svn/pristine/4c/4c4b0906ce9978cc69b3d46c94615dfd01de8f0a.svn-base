@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0" />
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>印之梦共享云打印</title>
+<link rel="stylesheet" href="styles/main.css" media="screen" />
+<script src="./js/jquery-2.2.3.min.js"></script>
+<script src="./js/ripple.js"></script>
+<script src="./prompt-insert-usb.js"></script>
+</head>
+<body>
+	<div class="homeContent">
+		<div class="titleBox">
+			<h1></h1>
+			<div class="title">欢迎使用共享打印设备</div>
+		</div>
+		<div class="usbPromptBox">
+			<div class="usbPrompt take">
+				<h3 class="h3">请插入U盘</h3>
+				<img src="./assets/USB.png" />
+				<div class="imgBox"></div>
+				<div class="back">
+					返回 (<span>5</span>秒)
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

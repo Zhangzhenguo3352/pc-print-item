@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0" />
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>印之梦共享云打印</title>
+<link rel="stylesheet" href="styles/main.css" media="screen" />
+<script src="./js/jquery-2.2.3.min.js"></script>
+<script src="./js/ripple.js"></script>
+<script src="./js/main.js"></script>
+<script src="./fault.js"></script>
+</head>
+<body>
+	<div class="homeContent">
+		<div class="titleBox">
+			<h1></h1>
+			<div class="title">欢迎使用共享打印设备</div>
+		</div>
+		<div class="po_r">
+			<img src="./assets/carrt.png" />
+			<div class="text">系统暂时无法使用，请使用附近其他的印之梦智能打印终端！</div>
+			<ul class="box">
+				<li>
+					<div class="back flex">返回重试</div>
+				</li>
+				<li>
+					<div class="back" id="back">安全退出 (<span>5</span>秒)</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</body>
+</html>

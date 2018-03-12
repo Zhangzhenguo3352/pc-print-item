@@ -1,0 +1,24 @@
+$(function() {
+	
+	var timeNumber = 6;
+	var timer = null;
+	$('.back span').html('')
+	function fn() {
+		
+		timeNumber--;
+		$('.back span').html(timeNumber)
+		if( timeNumber <= 0 ) {
+			timeNumber = 0;
+			clearInterval(timer)
+			setTimeout(function() {
+				window.location.href="./home.html"; 
+			}, 500)
+		}
+	}
+	fn()
+	timer = setInterval(fn, 1000)
+
+	$('.back').click(function() {
+		window.location.href="./home.html"; 
+	})
+})

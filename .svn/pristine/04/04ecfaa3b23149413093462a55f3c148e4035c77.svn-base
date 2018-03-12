@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0" />
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>印之梦共享云打印</title>
+<link rel="stylesheet" href="./styles/swiper.min.css">
+<link rel="stylesheet" href="styles/main.css" media="screen" />
+<script src="./js/jquery-2.2.3.min.js"></script>
+<script src="./js/swiper.min.js"></script>
+<script src="./js/viewport.js"></script>
+<script src="./js/ripple.js"></script>
+<script src="./js/main.js"></script>
+<script src="./waiting.js"></script>
+</head>
+<body style="overflow: hidden;">
+	<div class="wrap">
+		<div class="logoAdvertisingPage">
+			<img src="./assets/LOGO-2.png" />
+		</div>
+	</div>
+	<div class="swiper-container" id="banners" style="display:none;">
+		<div class="swiper-wrapper">
+			<div class="swiper-slide">
+				<img src="./ad/1.jpg" />
+			</div>
+			<div class="swiper-slide">
+				<img src="./ad/2.jpg" />
+			</div>
+			<div class="swiper-slide">
+				<img src="./ad/3.jpg" />
+			</div>
+			<div class="swiper-slide">
+				<img src="./ad/4.jpg" />
+			</div>
+		</div>
+	</div>
+	<div class="wrap">
+		<video style="display:none;"
+			id="videoplayer" 
+			webkit-playsinline="" 
+			playsinline="" 
+			x-webkit-airplay="true" 
+			airplay="allow"
+			x5-video-player-type="h5" 
+			x5-video-player-fullscreen="true" 
+			x5-video-orientation="portraint" 
+			width="100%"
+			height="100%">
+		</video>
+	</div>
+	<div class="loadingBOX" style="display:none;">
+		<div class="flex clearfix">
+			<span>正在打印 </span><span>xxx文件.doc </span>
+		</div>
+		<div class="articleBox clearfix">
+			<div class="left">
+				<div style="width: 90%">
+					<div></div>
+				</div>
+			</div>
+			<div class="right">90%</div>
+		</div>
+	</div>	
+</body>
+</html>

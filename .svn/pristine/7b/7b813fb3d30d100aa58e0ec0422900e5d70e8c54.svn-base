@@ -1,0 +1,21 @@
+$(function() {
+    var swiper = new Swiper('.swiper-container', {
+        slidesPerView: 1,
+        spaceBetween: 0,
+        loop: true,
+        effect : 'coverflow',
+        autoplay: {
+            delay: 3000,
+            stopOnLastSlide: false,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+          
+    });
+    $('.loadingBOX').click(function() {
+        alert(1)
+    })
+})

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0"/>
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="format-detection" content="telephone=no">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<meta http-equiv="Expires" content="0">
+    <title>印之梦共享云打印</title>
+	<script src="./js/jquery-2.2.3.min.js" ></script>
+	<script src="./js/main.js" ></script>
+    <script src="./js/swiper.min.js"></script>
+    <script src="./js/viewport.js" ></script>
+    <script src="./js/index.js" ></script>
+    <link rel="stylesheet" href="./styles/swiper.min.css">
+	<link rel="stylesheet" href="styles/main.css" media="screen" title="no title" charset="utf-8"/>
+</head>
+<body style="overflow: hidden;">
+    <!-- 轮播图 -->
+    <!-- <div class="swiper-container" id="advertisingBanner">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <img src="./assets/home-bj.png"/>
+            </div>
+            <div class="swiper-slide">
+                <img src="./assets/home-bj.png"/>
+            </div>
+            <div class="swiper-slide">
+                <img src="./assets/home-bj.png"/>
+            </div>
+            <div class="swiper-slide">
+                <img src="./assets/home-bj.png"/>
+            </div>
+            </div>
+        </div>
+    </div>  -->
+    <!-- 视频 -->
+    <!-- 11816159-1.flv -->
+    <!-- http://www.w3school.com.cn/example/html5/mov_bbb.mp4 -->
+    <!-- video/333.mp4 -->
+        <div class="wrap">
+            <video 
+                webkit-playsinline="" 
+                playsinline="" 
+                x-webkit-airplay="true" 
+                airplay="allow" 
+                x5-video-player-type="h5" 
+                x5-video-player-fullscreen="true" 
+                x5-video-orientation="portraint" 
+                reload="auto" 
+                id="video" 
+                width="100%" 
+                height="100%" loop
+            >
+                <source src="video/444.mp4" type="video/mp4">  
+        </video>
+    <div class="logoAdvertisingPage">
+        <img src="./assets/LOGO-2.png"/>
+    </div>
+</body>
+</html>

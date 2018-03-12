@@ -1,0 +1,35 @@
+$(function() {
+    var swiper = new Swiper('.swiper-container', {
+        slidesPerView: 1,
+        spaceBetween: 0,
+        loop: true,
+        effect : 'coverflow',
+        autoplay: {
+            delay: 3000,
+            stopOnLastSlide: false,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+          
+    });
+    var vid = document.getElementById('video');
+    var adBanner = document.getElementById('advertisingBanner');
+    if(!!vid) {
+        vid.play();
+        vid.addEventListener('ended', vidEnd, false);
+        function vidEnd(){
+            console.log('video end');
+        }
+        vid.onclick=function() {
+            window.location.href="./home.html"; 
+        }
+    }
+    if(!!adBanner) {
+        adBanner.onclick=function() {
+            window.location.href="./home.html"; 
+        }
+    }
+})

@@ -1,0 +1,30 @@
+$(function()
+{
+    var timeNumber = 6;
+    var timer = null;
+    $('.back span').html('')
+    function fn()
+    {
+        timeNumber--;
+        $('.back span').html(timeNumber)
+        if (timeNumber <= 1)
+        {
+            timeNumber = 0;
+            clearInterval(timer)
+            setTimeout(function()
+            {
+                window.location.href = "/";
+            }, 1000)
+        }
+    }
+    fn()
+    timer = setInterval(fn, 1000)
+    $('.back.flex').click(function()
+    {
+        window.history.go(-2);
+    })
+    $('.back#back').click(function()
+    {
+        window.location.href = '/';
+    })
+})

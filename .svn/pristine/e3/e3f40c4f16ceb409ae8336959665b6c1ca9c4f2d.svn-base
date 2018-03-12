@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>印之梦共享云打印</title>
+</head>
+<body>
+	<script>
+	function closeme()
+	{
+        if (typeof (WeixinJSBridge) == "function")
+        {
+            WeixinJSBridge.call('closeWindow');
+        } else 
+        {
+            if(parent)
+            {
+	            //window.close();
+            }
+        }
+	}
+	closeme();
+    </script>
+	登录成功
+	<a onclick="closeme();">点我关闭</a>
+</body>
+</html>
